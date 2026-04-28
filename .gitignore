@@ -1,5 +1,32 @@
-node_modules
-# Keep environment variables out of version control
-.env
+# Dependencies
+node_modules/
 
+# Build output
+dist/
+
+# Environment variables (NEVER commit secrets)
+.env
+.env.*
+!.env.example
+
+# Prisma generated client
 /src/generated/prisma
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Scratch / test files
+scratch/
