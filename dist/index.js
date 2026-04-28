@@ -29,7 +29,16 @@ const pool = new pg_1.Pool({
 const adapter = new adapter_pg_1.PrismaPg(pool);
 const prisma = new client_1.PrismaClient({ adapter });
 const PORT = process.env.PORT || 5000;
-app.use((0, helmet_1.default)());
+app.use((0, helmet_1.default)({
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc: ["'self'", "'unsafe-inline'"],
+            styleSrc: ["'self'", "'unsafe-inline'"],
+            imgSrc: ["'self'", "data:", "validator.swagger.io"],
+        },
+    },
+}));
 app.use((0, compression_1.default)());
 app.use((0, morgan_1.default)(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 const limiter = (0, express_rate_limit_1.default)({
