@@ -1,0 +1,143 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "CyberRonin Backend API",
+    "version": "1.0.0",
+    "description": "API documentation for the CyberRonin Whitelist Tracking System"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Local Development Server"
+    }
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "summary": "Health check",
+        "responses": {
+          "200": {
+            "description": "Server is active",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "example": "CyberRonin Backend: ACTIVE"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/whitelist": {
+      "get": {
+        "summary": "Get all whitelisted dossiers",
+        "description": "Retrieves all recorded entries from the Undergrid.",
+        "responses": {
+          "200": {
+            "description": "List of whitelisted entries",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/WhitelistEntry"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "summary": "Submit a new dossier to the whitelist",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["twitter", "wallet"],
+                "properties": {
+                  "twitter": {
+                    "type": "string",
+                    "example": "@CyberRonin"
+                  },
+                  "wallet": {
+                    "type": "string",
+                    "example": "0x123...456"
+                  },
+                  "referral": {
+                    "type": "string",
+                    "example": "ShadowRunner"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully recorded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/WhitelistEntry"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or duplicate entry"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "WhitelistEntry": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "twitter": {
+            "type": "string"
+          },
+          "wallet": {
+            "type": "string"
+          },
+          "referral": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    }
+  }
+}
